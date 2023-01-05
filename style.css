@@ -1,0 +1,226 @@
+@import url(https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500&display=swap);
+
+:root {
+    --primary: #fdc435;
+    --primary-b: #fdfaf3;
+    --secondary: #6035fd;
+    --sm: 640px;
+    --md: 768px;
+    --lg: 1024px;
+    --xl: 1280px;
+    --xl2: 1536px;
+}
+
+* {
+    font-family: 'Vazirmatn';
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.container {
+    max-width: 100%;
+    padding: auto 10px;
+    margin: auto;
+}
+
+@media screen and (min-width: 640px) {
+    .container {
+        max-width: var(--sm);
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .container {
+        max-width: var(--md);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .container {
+        max-width: var(--lg);
+    }
+}
+
+@media screen and (min-width: 1280px) {
+    .container {
+        max-width: var(--xl);
+    }
+}
+
+@media screen and (min-width: 1536px) {
+    .container {
+        max-width: var(--xl2);
+    }
+}
+
+/* header stye */
+header.nav-header {
+    width: 100%;
+    padding: 5px;
+    background-color: var(--primary-b);
+    color: var(--primary);
+    box-shadow: 0 -5px 20px #d8d8d8;
+}
+
+.header-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-icon {
+    color: var(--primary);
+    width: 5rem;
+    height: 5rem;
+    cursor: pointer;
+}
+
+.header-text {
+    font-size: large;
+}
+
+.cart {
+    position: relative;
+}
+
+.cart .counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px 6px;
+    border-radius: 9999px;
+    background-color: var(--secondary);
+}

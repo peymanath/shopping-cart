@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Shopping Cart</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="0" height="0"
+        style="display: none; position: absolute; visibility: hidden;">
+        <symbol viewBox="0 0 24 24" id="bars">
+            <path fill="currentColor"
+                d="M3 8h18a1 1 0 0 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z">
+            </path>
+        </symbol>
+        <symbol viewBox="0 0 24 24" id="shopping" fill="none">
+            <path fill="currentColor"
+                d="M9 20a1 1 0 1 1 0 2a1 1 0 0 1 0-2Zm7 0a1 1 0 1 1 0 2a1 1 0 0 1 0-2ZM3.495 2.631l.105.07l1.708 1.28a2 2 0 0 1 .653.848l.06.171h12.846a2 2 0 0 1 1.998 2.1l-.013.148l-.457 3.655a5 5 0 0 1-4.32 4.34l-.226.023l-7.313.61l.26 1.124H17.5a1 1 0 0 1 .117 1.993L17.5 19H8.796a2 2 0 0 1-1.906-1.393l-.043-.157l-2.74-11.87L2.4 4.3a1 1 0 0 1 .985-1.723l.11.054ZM18.867 7H6.487l1.595 6.906l7.6-.633a3 3 0 0 0 2.728-2.617L18.867 7Z" />
+        </symbol>
+    </svg>
+
+
+    <header class="nav-header">
+        <div class="container header-item">
+            <div>
+                <svg class="header-icon">
+                    <use xlink:href="#bars"></use>
+                </svg>
+            </div>
+            <div class="header-text">
+                <span>Shoping Cart</span>
+            </div>
+            <div class="cart">
+                <svg class="header-icon shopping">
+                    <use xlink:href="#shopping"></use>
+                </svg>
+                <div class="counter">0</div>
+            </div>
+        </div>
+    </header>
+</body>
+
+</html>
