@@ -3,8 +3,9 @@ const $ = document,
     cartIcon = $.getElementById('cartIcon'),
     cartModal = $.getElementById('cartModal'),
     confirmModal = $.getElementById('confirmModal'),
-    productCards = $.querySelector('.product-cards'),
-    cartTest = [{ id: 6 }, { id: 3 }]
+    productCards = $.querySelector('.product-cards')
+
+let cart = [];
 
 
 import { productsData } from "./products.js"
@@ -31,7 +32,7 @@ class Ui {
                 <h2>${item.title}</h2>
                 <div class="product-card__buy">
                     <p class="product-card__price">${item.price}$</p>
-                    <p id="addToCartBtn" class="btn" data-id="${item.id}">add to cart</p>
+                    <button type="button" id="addToCartBtn" class="btn" data-id="${item.id}">add to cart</button>
                 </div>
             </div>
             </div>
@@ -46,15 +47,22 @@ class Ui {
         addToCartBtn.forEach(item => {
             const id = item.dataset.id
 
-            const idInCart = cartTest.find(p => p.id === id)
+            const idInCart = cart.find(p => p.id === id)
 
             if (idInCart) {
                 item.innerHTML = "In Cart"
                 item.disabled = true
             }
 
-            item.addEventListener('click' , event =>{
-                console.log(event.target.dataset.id);
+            item.addEventListener('click', event => {
+                event.target.innerHTML = "In Cart";
+                event.target.disabled = true;
+
+                const getProducts = Storage.getProducts(id)
+
+                cart = [...cart, { ...getProducts, quantity: 1 }]
+
+                Storage.saveCart(cart)
             })
 
         })
@@ -63,8 +71,15 @@ class Ui {
 
 // 3. save Storage
 class Storage {
-    saveProducts(data) {
+    static saveProducts(data) {
         localStorage.setItem("products", JSON.stringify(data))
+    }
+
+    static getProducts(id) {
+        return JSON.parse(localStorage.getItem('products')).find(p => p.id === parseInt(id))
+    }
+    static saveCart(cart) {
+        localStorage.setItem('carts', JSON.stringify(cart))
     }
 }
 
@@ -85,7 +100,7 @@ $.addEventListener('DOMContentLoaded', () => {
     const ui = new Ui();
     ui.displayProducts(productsData)
     ui.getAddToCartBtns()
-    const saveProduct = new Storage().saveProducts(productsData)
+    Storage.saveProducts(productsData)
 })
 backDrop.addEventListener('click', closemodalcart)
 confirmModal.addEventListener('click', closemodalcart)

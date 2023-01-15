@@ -47,4 +47,10 @@ export const productsData = [
     price: 24.99,
     imageUrl: "/images/product-8.jpeg",
   },
+  {
+    id: 9,
+    title: "meating",
+    price: 299.99,
+    imageUrl: "/images/product-8.jpeg",
+  },
 ];

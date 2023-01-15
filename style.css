@@ -276,6 +276,13 @@ header.nav-header {
     transition: all .3s;
 }
 
+.btn:disabled {    
+    cursor:default;
+    opacity: 0.5;
+    background-color: var(--secondary);
+    color: var(--secondary-b);
+}
+
 /* Cart Modal */
 .cart-modal {
     width: 300px;
