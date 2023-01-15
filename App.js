@@ -3,10 +3,12 @@ const $ = document,
     cartIcon = $.getElementById('cartIcon'),
     cartModal = $.getElementById('cartModal'),
     confirmModal = $.getElementById('confirmModal'),
-    productCards = $.querySelector('.product-cards')
+    productCards = $.querySelector('.product-cards'),
+    totalPrice = $.getElementById('totalPrice'),
+    cartItem = $.getElementById('cartItem')
+
 
 let cart = [];
-
 
 import { productsData } from "./products.js"
 
@@ -58,14 +60,33 @@ class Ui {
                 event.target.innerHTML = "In Cart";
                 event.target.disabled = true;
 
-                const getProducts = Storage.getProducts(id)
+                const getProducts = { ...Storage.getProducts(id), quantity: 1 }
 
-                cart = [...cart, { ...getProducts, quantity: 1 }]
+                cart = [...cart, getProducts]
 
                 Storage.saveCart(cart)
+
+                this.setCartValue(cart)
             })
 
         })
+    }
+
+    setCartValue(cart){
+
+        let totalCartItem = 0;
+
+        const cartTotal = cart.reduce((acc ,curr)=>{
+
+            totalCartItem += curr.quantity
+
+            return acc + curr.quantity * curr.price;
+
+        } , 0)
+
+        totalPrice.innerText = cartTotal.toFixed(2);
+        cartItem.innerText = totalCartItem;
+
     }
 }
 
