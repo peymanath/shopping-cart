@@ -1,9 +1,11 @@
-const $ = document;
-const backDrop = $.getElementById('bakdrop')
-const cartIcon = $.getElementById('cartIcon')
-const cartModal = $.getElementById('cartModal')
-const confirmModal = $.getElementById('confirmModal')
-const productCards = $.querySelector('.product-cards')
+const $ = document,
+    backDrop = $.getElementById('bakdrop'),
+    cartIcon = $.getElementById('cartIcon'),
+    cartModal = $.getElementById('cartModal'),
+    confirmModal = $.getElementById('confirmModal'),
+    productCards = $.querySelector('.product-cards'),
+    cartTest = [{ id: 6 }, { id: 3 }]
+
 
 import { productsData } from "./products.js"
 
@@ -29,13 +31,33 @@ class Ui {
                 <h2>${item.title}</h2>
                 <div class="product-card__buy">
                     <p class="product-card__price">${item.price}$</p>
-                    <p class="btn" data-id="${item.id}">add to cart</p>
+                    <p id="addToCartBtn" class="btn" data-id="${item.id}">add to cart</p>
                 </div>
             </div>
             </div>
             `
         });
 
+    }
+
+    getAddToCartBtns() {
+        const addToCartBtn = [...$.querySelectorAll('#addToCartBtn')]
+
+        addToCartBtn.forEach(item => {
+            const id = item.dataset.id
+
+            const idInCart = cartTest.find(p => p.id === id)
+
+            if (idInCart) {
+                item.innerHTML = "In Cart"
+                item.disabled = true
+            }
+
+            item.addEventListener('click' , event =>{
+                console.log(event.target.dataset.id);
+            })
+
+        })
     }
 }
 
@@ -60,7 +82,9 @@ const closemodalcart = () => {
 // Events
 $.addEventListener('DOMContentLoaded', () => {
     const productsData = new Products().getProducts()
-    const ui = new Ui().displayProducts(productsData)
+    const ui = new Ui();
+    ui.displayProducts(productsData)
+    ui.getAddToCartBtns()
     const saveProduct = new Storage().saveProducts(productsData)
 })
 backDrop.addEventListener('click', closemodalcart)
