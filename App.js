@@ -21,13 +21,9 @@ class Ui {
 
     displayProducts(data) {
 
-        let result = "";
-
         data.forEach(item => {
-            const div = $.createElement('div')
-            div.classList.add('product-card');
-
-            div.innerHTML = `
+            productCards.innerHTML += `
+            <div class="product-card">
             <img src="${item.imageUrl}" alt="">
             <div class="product-card__description">
                 <h2>${item.title}</h2>
@@ -36,17 +32,18 @@ class Ui {
                     <p class="btn" data-id="${item.id}">add to cart</p>
                 </div>
             </div>
+            </div>
             `
-            productCards.appendChild(div)
         });
-
 
     }
 }
 
 // 3. save Storage
 class Storage {
-
+    saveProducts(data) {
+        localStorage.setItem("products", JSON.stringify(data))
+    }
 }
 
 
@@ -64,7 +61,7 @@ const closemodalcart = () => {
 $.addEventListener('DOMContentLoaded', () => {
     const productsData = new Products().getProducts()
     const ui = new Ui().displayProducts(productsData)
-
+    const saveProduct = new Storage().saveProducts(productsData)
 })
 backDrop.addEventListener('click', closemodalcart)
 confirmModal.addEventListener('click', closemodalcart)
