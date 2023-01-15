@@ -192,6 +192,18 @@ header.nav-header {
     cursor: pointer;
 }
 
+.cart-icon {
+    color: attr(color);
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+}
+
+.cart-icon.quantity {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 .header-text {
     font-size: large;
 }
@@ -327,6 +339,18 @@ header.nav-header {
 .cart-modal__item img{
     border-radius: 5px;
     width: 100px;
+}
+
+.cart-modal__item--price-once{
+    font-size: 1.5rem;
+    color: var(--secondary);
+}
+
+.cart-modal__quantity{
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    font-size: 1.5rem;
 }
 
 .cart-modal__computing{
