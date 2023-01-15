@@ -23,7 +23,7 @@
     </svg>
 
     <!-- ------------------- Backdrop Srction ------------------- -->
-    <div class="bakdrop"></div>
+    <div id="bakdrop" class="bakdrop"></div>
 
     <!-- ------------------- Header Srction ------------------- -->
     <header class="nav-header">
@@ -46,7 +46,7 @@
             </div>
 
 
-            <div class="cart">
+            <div id="cartIcon" class="cart">
 
                 <svg class="header-icon shopping">
                     <use xlink:href="#shopping"></use>
@@ -60,9 +60,7 @@
 
     </header>
 
-
     <!-- ------------------- Product List Section ------------------- -->
-
     <main>
 
         <section class="container our-product-title">
@@ -181,8 +179,8 @@
 
         </section>
 
-        <!-- ------------------- Load Js Asset ------------------- -->
-        <section class="cart-modal">
+        <!-- ------------------- Cart Modal Asset ------------------- -->
+        <section id="cartModal" class="cart-modal">
 
             <p class="cart-modal__title">Your Cart</p>
 
@@ -260,9 +258,9 @@
 
                 <p class="cart-modal__total">Total price: <span id="totalPriceJs" class="cart-modal__price">90.99$</span></p>
 
-                <p class="btn cart-btn-border">add to cart</p>
+                <p class="btn cart-btn-border">Clear Cart</p>
 
-                <p class="btn cart-btn">add to cart</p>
+                <p id="confirmModal" class="btn cart-btn">Confirm</p>
 
             </div>
 
