@@ -229,10 +229,10 @@ header.nav-header {
 }
 
 .product-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-column-gap: 3rem;
+    grid-row-gap: 5rem;
     padding-bottom: 50px;
     width: 100%;
     gap: 20px;
@@ -395,10 +395,6 @@ header.nav-header {
     .container {
         max-width: var(--md);
     }
-
-    .product-card {
-        width: 48%;
-    }
     .cart-modal {
         width: 450px;
     }
@@ -408,10 +404,6 @@ header.nav-header {
     .container {
         max-width: var(--lg);
     }
-
-    .product-card {
-        width: 31%;
-    }
     .cart-modal {
         width: 600px;
     }
@@ -420,9 +412,6 @@ header.nav-header {
 @media screen and (min-width: 1280px) {
     .container {
         max-width: var(--xl);
-    }
-    .cart-modal {
-        width: 800px;
     }
 }
 

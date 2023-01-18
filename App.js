@@ -6,7 +6,8 @@ const $ = document,
     productCards = $.querySelector('.product-cards'),
     totalPrice = $.getElementById('totalPrice'),
     cartItem = $.getElementById('cartItem'),
-    cartModalItems = $.getElementById('cartModalItems')
+    cartModalItems = $.getElementById('cartModalItems'),
+    clearCart = $.getElementById('clearCart')
 
 
 let cart = [];
@@ -140,6 +141,24 @@ class Ui {
         this.setCartValue(cart)
 
     }
+
+    clearLogic() {
+        clearCart.addEventListener('click', () => {
+            cart.forEach((cItem) => this.removeItem(cItem.id))
+        })
+    }
+
+    removeItem(idItems) {
+        
+        cart = cart.filter((idItem) => idItem.id !== idItems)
+
+        // upsate price & item
+        this.setCartValue(cart)
+
+        // Update Storage
+        Storage.saveCart(cart);
+
+    }
 }
 
 // 3. save Storage
@@ -184,6 +203,7 @@ $.addEventListener('DOMContentLoaded', () => {
 
     ui.getAddToCartBtns()
 
+    ui.clearLogic()
 
     Storage.saveProducts(productsData)
 })
