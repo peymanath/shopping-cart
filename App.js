@@ -45,20 +45,25 @@ class Ui {
     }
 
     getAddToCartBtns() {
-        const addToCartBtn = [...$.querySelectorAll('#addToCartBtn')]
 
-        addToCartBtn.forEach(item => {
-            const id = item.dataset.id
 
-            const idInCart = cart.find(p => p.id === id)
+        const addToCartBtn = $.querySelectorAll('#addToCartBtn')
+        const buttons = [...addToCartBtn]
 
-            if (idInCart) {
-                item.innerHTML = "In Cart"
+
+        buttons.forEach((item) => {
+
+            const id = parseInt(item.dataset.id)
+
+            const isInCart = cart.find((carts) => carts.id === id)
+            if (isInCart) {
+                item.innerText = "In Cart"
                 item.disabled = true
             }
 
             item.addEventListener('click', event => {
-                event.target.innerHTML = "In Cart";
+
+                event.target.innerText = "In Cart";
                 event.target.disabled = true;
 
                 const getProducts = { ...Storage.getProducts(id), quantity: 1 }
@@ -169,11 +174,17 @@ const closemodalcart = () => {
 
 // Events
 $.addEventListener('DOMContentLoaded', () => {
-    const productsData = new Products().getProducts()
     const ui = new Ui();
-    ui.displayProducts(productsData)
-    ui.getAddToCartBtns()
+
     ui.setupApp()
+
+    const productsData = new Products().getProducts()
+
+    ui.displayProducts(productsData)
+
+    ui.getAddToCartBtns()
+
+
     Storage.saveProducts(productsData)
 })
 backDrop.addEventListener('click', closemodalcart)
