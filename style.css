@@ -320,6 +320,8 @@ header.nav-header {
 .cart-modal__items{
     display: flex;
     flex-direction: column;
+    height: 300px;
+    overflow-y: auto;
     gap: 20px;
     border: 1px solid var(--secondary);
     border-radius: 10px;

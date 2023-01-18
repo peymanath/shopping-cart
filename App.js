@@ -5,7 +5,8 @@ const $ = document,
     confirmModal = $.getElementById('confirmModal'),
     productCards = $.querySelector('.product-cards'),
     totalPrice = $.getElementById('totalPrice'),
-    cartItem = $.getElementById('cartItem')
+    cartItem = $.getElementById('cartItem'),
+    cartModalItems = $.getElementById('cartModalItems')
 
 
 let cart = [];
@@ -67,25 +68,71 @@ class Ui {
                 Storage.saveCart(cart)
 
                 this.setCartValue(cart)
+
+                this.addCartItem(getProducts)
             })
 
         })
     }
 
-    setCartValue(cart){
+    setCartValue(cart) {
 
         let totalCartItem = 0;
 
-        const cartTotal = cart.reduce((acc ,curr)=>{
+        const cartTotal = cart.reduce((acc, curr) => {
 
             totalCartItem += curr.quantity
 
             return acc + curr.quantity * curr.price;
 
-        } , 0)
+        }, 0)
 
         totalPrice.innerText = cartTotal.toFixed(2);
         cartItem.innerText = totalCartItem;
+
+    }
+
+    addCartItem(cartItem) {
+        const div = $.createElement('div');
+        div.classList.add("cart-modal__item");
+        div.innerHTML = `
+        <div class="cart-modal__item--columns">
+           <img src="${cartItem.imageUrl}" alt="">
+        </div>
+
+        <div class="cart-modal__item--columns">
+            <h2>${cartItem.title}</h2>
+            <p class="cart-modal__item--price-once">${cartItem.price}$</p>
+        </div>
+
+        <div class="cart-modal__quantity cart-modal__item--columns">
+            <svg class="cart-icon quantity" color="green">
+                <use xlink:href="#plus"></use>
+            </svg>
+            <p>${cartItem.quantity}</p>
+            <svg class="cart-icon quantity" color="red">
+                <use xlink:href="#minus"></use>
+            </svg>
+        </div>
+
+        <div class="cart-modal__item--columns">
+            <svg class="cart-icon" color="#920000">
+                <use xlink:href="#trash"></use>
+            </svg>
+        </div>`;
+
+        cartModalItems.appendChild(div)
+    }
+
+    setupApp() {
+
+        cart = Storage.getCart() || [];
+
+        cart.map(item => {
+            this.addCartItem(item)
+        })
+
+        this.setCartValue(cart)
 
     }
 }
@@ -99,8 +146,13 @@ class Storage {
     static getProducts(id) {
         return JSON.parse(localStorage.getItem('products')).find(p => p.id === parseInt(id))
     }
+
     static saveCart(cart) {
         localStorage.setItem('carts', JSON.stringify(cart))
+    }
+
+    static getCart() {
+        return JSON.parse(localStorage.getItem('carts'));
     }
 }
 
@@ -121,6 +173,7 @@ $.addEventListener('DOMContentLoaded', () => {
     const ui = new Ui();
     ui.displayProducts(productsData)
     ui.getAddToCartBtns()
+    ui.setupApp()
     Storage.saveProducts(productsData)
 })
 backDrop.addEventListener('click', closemodalcart)
