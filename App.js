@@ -46,8 +46,6 @@ class Ui {
     }
 
     getAddToCartBtns() {
-
-
         const addToCartBtn = $.querySelectorAll('#addToCartBtn')
         const buttons = [...addToCartBtn]
 
@@ -101,6 +99,7 @@ class Ui {
     addCartItem(cartItem) {
         const div = $.createElement('div');
         div.classList.add("cart-modal__item");
+        div.setAttribute("data-id", cartItem.id);
         div.innerHTML = `
         <div class="cart-modal__item--columns">
            <img src="${cartItem.imageUrl}" alt="">
@@ -112,18 +111,18 @@ class Ui {
         </div>
 
         <div class="cart-modal__quantity cart-modal__item--columns">
-            <svg class="cart-icon quantity" color="green">
-                <use xlink:href="#plus"></use>
+            <svg class="cart-icon quantity plus" color="green" data-id="${cartItem.id}">
+                <use xlink:href="#plus" class="plus" data-id="${cartItem.id}"></use>
             </svg>
-            <p>${cartItem.quantity}</p>
-            <svg class="cart-icon quantity" color="red">
-                <use xlink:href="#minus"></use>
+            <p class="unselectable">${cartItem.quantity}</p>
+            <svg class="cart-icon quantity minus" color="red" data-id="${cartItem.id}">
+                <use xlink:href="#minus" class="minus" data-id="${cartItem.id}"></use>
             </svg>
         </div>
 
         <div class="cart-modal__item--columns">
-            <svg class="cart-icon" color="#920000">
-                <use xlink:href="#trash"></use>
+            <svg class="cart-icon trash" color="#920000" data-id="${cartItem.id}">
+                <use xlink:href="#trash" class="trash" data-id="${cartItem.id}"></use>
             </svg>
         </div>`;
 
@@ -143,13 +142,83 @@ class Ui {
     }
 
     clearLogic() {
-        clearCart.addEventListener('click', () => {
-            cart.forEach((cItem) => this.removeItem(cItem.id))
+
+        // Remove All Item to Cart
+        clearCart.addEventListener('click', () => this.clearCart())
+
+        // cart functionality
+        cartModalItems.addEventListener('click', (e) => {
+
+            //cheack classList target
+            if (e.target.classList.contains('plus')) this.increment(e.target)
+
+            else if (e.target.classList.contains('minus')) this.decrement(e.target)
+
+            else if (e.target.classList.contains('trash')) {
+
+                // Remove Item
+                const removeItem = cart.find((event) => event.id == e.target.dataset.id);
+                this.removeItem(removeItem.id)
+
+                // Save Storage 
+                Storage.saveCart(cart)
+
+                // remove Item to Dom
+                Storage.saveCart(cart)
+                const test = [...cartModalItems.children];
+                test.forEach((event) => {
+                    if (event.dataset.id == e.target.dataset.id) cartModalItems.removeChild(event)
+                })
+            }
         })
     }
 
+    increment(target) {
+        // get item from cart
+        const addedItem = cart.find((cItem) => cItem.id == target.dataset.id)
+        addedItem.quantity++
+
+        // update cart value
+        this.setCartValue(cart)
+
+        // save cart
+        Storage.saveCart(cart)
+
+        // Update Total Item
+        target.nextElementSibling.innerText = addedItem.quantity
+    }
+
+    decrement(target) {
+
+        // get item from cart
+        const addedItem = cart.find((cItem) => cItem.id == target.dataset.id)
+        addedItem.quantity--
+
+        // update cart value
+        this.setCartValue(cart)
+
+        // save cart
+        Storage.saveCart(cart)
+
+        // Update Total Item
+        target.previousElementSibling.innerText = addedItem.quantity
+    }
+
+    clearCart() {
+        // Remove Item to Strorage
+        cart.forEach((cItem) => this.removeItem(cItem.id))
+
+        // Remove Item to Dom
+        while (cartModalItems.children.length) {
+            cartModalItems.removeChild(cartModalItems.children[0])
+        }
+
+        // Close Modal after clear
+        closemodalcart()
+    }
+
     removeItem(idItems) {
-        
+
         cart = cart.filter((idItem) => idItem.id !== idItems)
 
         // upsate price & item
@@ -158,6 +227,21 @@ class Ui {
         // Update Storage
         Storage.saveCart(cart);
 
+        // change text buttons
+        this.changeTextButton(idItems)
+    }
+
+    changeTextButton(id) {
+
+        [...$.querySelectorAll('#addToCartBtn')].forEach((carts) => {
+
+            const isInCart = parseInt(carts.dataset.id) === parseInt(id)
+
+            if (isInCart) {
+                carts.innerText = "add to cart"
+                carts.disabled = false
+            }
+        })
     }
 }
 
