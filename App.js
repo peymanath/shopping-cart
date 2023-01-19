@@ -1,3 +1,15 @@
+/**
+ * @author Peyman Naderi github.com\peymanath
+ * 
+ * @version 1.0.0
+ * 
+ * {@linkcode https://github.com/peymanath/shopping-cart View On Github}
+ * 
+ */
+
+//import Api to JS file
+import { productsData } from "./products.js"
+
 const $ = document,
     backDrop = $.getElementById('bakdrop'),
     cartIcon = $.getElementById('cartIcon'),
@@ -9,45 +21,73 @@ const $ = document,
     cartModalItems = $.getElementById('cartModalItems'),
     clearCart = $.getElementById('clearCart')
 
-
 let cart = [];
 
-import { productsData } from "./products.js"
+/**
+ * 
+ * get product list from API
+ * 
+ * @returns {(Object|Array)}
+ * 
+ */
+const getProductsAPI = () => productsData
 
-// 1. get Product 
-class Products {
-
-    // get frop api end points
-    getProducts() {
-        return productsData
-    }
-}
-
-// 2. display Producr
+/**
+ * 
+ * Make all design application from Ui class
+ * 
+ * @public
+ * 
+ * @class
+ * 
+ */
 class Ui {
 
+    /**
+     * 
+     * Make product list after DOM content loaded
+     * 
+     * @param {Element} data 
+     * 
+     */
     displayProducts(data) {
 
         data.forEach(item => {
             productCards.innerHTML += `
             <div class="product-card">
-            <img src="${item.imageUrl}" alt="">
-            <div class="product-card__description">
-                <h2>${item.title}</h2>
-                <div class="product-card__buy">
-                    <p class="product-card__price">${item.price}$</p>
-                    <button type="button" id="addToCartBtn" class="btn" data-id="${item.id}">add to cart</button>
+
+                <img src="${item.imageUrl}" alt="">
+
+                <div class="product-card__description">
+                    <h2>${item.title}</h2>
+
+                    <div class="product-card__buy">
+
+                        <p class="product-card__price">${item.price}$</p>
+
+                        <button type="button" id="addToCartBtn" class="btn" data-id="${item.id}">add to cart</button>
+                        
+                    </div>
+
                 </div>
-            </div>
+
             </div>
             `
         });
 
     }
 
-    getAddToCartBtns() {
-        const addToCartBtn = $.querySelectorAll('#addToCartBtn')
-        const buttons = [...addToCartBtn]
+    /**
+     * action Add to cart with buttons
+     * 
+     * @param {string} [query=#addToCartBtn] id or className or tagName
+     * 
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll | Doc QuerySelector}
+     * 
+     */
+    addToCart(query = '#addToCartBtn') {
+
+        const buttons = [...$.querySelectorAll(query)]
 
 
         buttons.forEach((item) => {
@@ -79,11 +119,23 @@ class Ui {
         })
     }
 
-    setCartValue(cart) {
+    /**
+     * 
+     * @param {Array[Object]} ListItem 
+     * 
+     */
+    setCartValue(ListItem) {
 
         let totalCartItem = 0;
 
-        const cartTotal = cart.reduce((acc, curr) => {
+        /**
+         * @arg {Number} acc
+         * 
+         * @arg {Object} curr
+         * 
+         * @returns {Number}
+         */
+        const cartTotal = ListItem.reduce((acc, curr) => {
 
             totalCartItem += curr.quantity
 
@@ -91,68 +143,98 @@ class Ui {
 
         }, 0)
 
+        // Update Total Price
         totalPrice.innerText = cartTotal.toFixed(2);
+
+        // Update Toral Itam
         cartItem.innerText = totalCartItem;
 
     }
 
+    /**
+     * 
+     * add item to cart (DOM)
+     * 
+     * @param {Object} cartItem 
+     */
     addCartItem(cartItem) {
-        const div = $.createElement('div');
-        div.classList.add("cart-modal__item");
-        div.setAttribute("data-id", cartItem.id);
-        div.innerHTML = `
-        <div class="cart-modal__item--columns">
-           <img src="${cartItem.imageUrl}" alt="">
+
+        // product ID
+        const id = cartItem.id
+
+        // add content to Element
+        const elementCartArea = `
+        <div class="cart-modal__item" data-id="${id}">
+
+            <div class="cart-modal__item--columns">
+                <img src="${cartItem.imageUrl}" alt="">
+            </div>
+
+            <div class="cart-modal__item--columns">
+                <h2>${cartItem.title}</h2>
+                <p class="cart-modal__item--price-once">${cartItem.price}$</p>
+            </div>
+
+            <div class="cart-modal__quantity cart-modal__item--columns">
+                <svg class="cart-icon quantity plus" color="green" data-id="${id}">
+                    <use xlink:href="#plus" class="plus" data-id="${id}"></use>
+                </svg>
+                <p class="unselectable">${cartItem.quantity}</p>
+                <svg class="cart-icon quantity minus" color="red" data-id="${id}">
+                    <use xlink:href="#minus" class="minus" data-id="${id}"></use>
+                </svg>
+            </div>
+
+            <div class="cart-modal__item--columns">
+                <svg class="cart-icon trash" color="#920000" data-id="${id}">
+                    <use xlink:href="#trash" class="trash" data-id="${id}"></use>
+                </svg>
+            </div>
+
         </div>
+        `;
 
-        <div class="cart-modal__item--columns">
-            <h2>${cartItem.title}</h2>
-            <p class="cart-modal__item--price-once">${cartItem.price}$</p>
-        </div>
-
-        <div class="cart-modal__quantity cart-modal__item--columns">
-            <svg class="cart-icon quantity plus" color="green" data-id="${cartItem.id}">
-                <use xlink:href="#plus" class="plus" data-id="${cartItem.id}"></use>
-            </svg>
-            <p class="unselectable">${cartItem.quantity}</p>
-            <svg class="cart-icon quantity minus" color="red" data-id="${cartItem.id}">
-                <use xlink:href="#minus" class="minus" data-id="${cartItem.id}"></use>
-            </svg>
-        </div>
-
-        <div class="cart-modal__item--columns">
-            <svg class="cart-icon trash" color="#920000" data-id="${cartItem.id}">
-                <use xlink:href="#trash" class="trash" data-id="${cartItem.id}"></use>
-            </svg>
-        </div>`;
-
-        cartModalItems.appendChild(div)
+        // append Element to DOM
+        cartModalItems.innerHTML += elementCartArea;
     }
 
+    /**
+     * 
+     * After loading Dom, add the local storage item to the cart
+     * 
+     * @constructor
+     * 
+     */
     setupApp() {
 
+        // Check the shopping cart that is empty or has items
         cart = Storage.getCart() || [];
 
+        // Looping over cart items
         cart.map(item => {
             this.addCartItem(item)
         })
 
+        // Update Cart Value
         this.setCartValue(cart)
-
     }
 
+    /**
+     * 
+     * Clear item to shopping cart
+     */
     clearLogic() {
 
         // Remove All Item to Cart
-        clearCart.addEventListener('click', () => this.clearCart())
+        clearCart.addEventListener('click', () => this.clearCartButton())
 
         // cart functionality
         cartModalItems.addEventListener('click', (e) => {
 
             //cheack classList target
-            if (e.target.classList.contains('plus')) this.increment(e.target)
+            if (e.target.classList.contains('plus')) this.incrementDecrement(e.target, "plus")
 
-            else if (e.target.classList.contains('minus')) this.decrement(e.target)
+            else if (e.target.classList.contains('minus')) this.incrementDecrement(e.target, "minus")
 
             else if (e.target.classList.contains('trash')) {
 
@@ -173,50 +255,55 @@ class Ui {
         })
     }
 
-    increment(target) {
-        // get item from cart
-        const addedItem = cart.find((cItem) => cItem.id == target.dataset.id)
-        addedItem.quantity++
+    /**
+     * 
+     * After clicking "Clear Cart", all items in the cart will be removed
+     * 
+     */
+    clearCartButton() {
 
-        // update cart value
-        this.setCartValue(cart)
+        // Cart Item children
+        const _cartItem = cartModalItems.children;
 
-        // save cart
-        Storage.saveCart(cart)
-
-        // Update Total Item
-        target.nextElementSibling.innerText = addedItem.quantity
-    }
-
-    decrement(target) {
-
-        // get item from cart
-        const addedItem = cart.find((cItem) => cItem.id == target.dataset.id)
-        addedItem.quantity--
-
-        // update cart value
-        this.setCartValue(cart)
-
-        // save cart
-        Storage.saveCart(cart)
-
-        // Update Total Item
-        target.previousElementSibling.innerText = addedItem.quantity
-    }
-
-    clearCart() {
         // Remove Item to Strorage
         cart.forEach((cItem) => this.removeItem(cItem.id))
 
         // Remove Item to Dom
-        while (cartModalItems.children.length) {
-            cartModalItems.removeChild(cartModalItems.children[0])
-        }
+        while (_cartItem.length) cartModalItems.removeChild(_cartItem[0])
 
         // Close Modal after clear
         closemodalcart()
     }
 
+    /**
+     * 
+     * @param {*} cartItem 
+     * @param {number} methode 
+     */
+    incrementDecrement(target, methode) {
+
+        // get item from cart
+        const addedItem = cart.find((cItem) => cItem.id == target.dataset.id)
+
+        if (methode === "minus") addedItem.quantity--
+        else if (methode === "plus") addedItem.quantity++
+
+        // update cart value
+        this.setCartValue(cart)
+
+        // save cart
+        Storage.saveCart(cart)
+
+        // Update Total Item
+
+        if (methode === "minus") target.previousElementSibling.innerText = addedItem.quantity
+        else if (methode === "plus") target.nextElementSibling.innerText = addedItem.quantity
+    }
+
+    /**
+     * 
+     * @param {*} idItems 
+     */
     removeItem(idItems) {
 
         cart = cart.filter((idItem) => idItem.id !== idItems)
@@ -231,6 +318,10 @@ class Ui {
         this.changeTextButton(idItems)
     }
 
+    /**
+     * 
+     * @param {*} id 
+     */
     changeTextButton(id) {
 
         [...$.querySelectorAll('#addToCartBtn')].forEach((carts) => {
@@ -245,8 +336,17 @@ class Ui {
     }
 }
 
-// 3. save Storage
+/**
+ * 
+ * Store information in LocalStorage
+ * 
+ * @public
+ * 
+ * @class
+ * 
+ */
 class Storage {
+
     static saveProducts(data) {
         localStorage.setItem("products", JSON.stringify(data))
     }
@@ -262,6 +362,7 @@ class Storage {
     static getCart() {
         return JSON.parse(localStorage.getItem('carts'));
     }
+
 }
 
 
@@ -275,22 +376,28 @@ const closemodalcart = () => {
     backDrop.style.display = "none"
 }
 
-// Events
+/**
+ * @event DOMContentLoaded
+ * 
+ * 
+ */
 $.addEventListener('DOMContentLoaded', () => {
+
     const ui = new Ui();
 
     ui.setupApp()
 
-    const productsData = new Products().getProducts()
+    const productsData = getProductsAPI()
 
     ui.displayProducts(productsData)
 
-    ui.getAddToCartBtns()
+    ui.addToCart()
 
     ui.clearLogic()
 
     Storage.saveProducts(productsData)
 })
+
 backDrop.addEventListener('click', closemodalcart)
 confirmModal.addEventListener('click', closemodalcart)
 cartIcon.addEventListener('click', showmodalcart)
