@@ -104,7 +104,7 @@ class Ui {
      * @constructor
      */
     static closeModalCart() {
-        cartModal.style.top = "-50%"
+        cartModal.style.top = "-100%"
         backDrop.style.display = "none"
     }
 
