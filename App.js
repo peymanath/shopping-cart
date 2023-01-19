@@ -10,18 +10,61 @@
 //import Api to JS file
 import { productsData } from "./products.js"
 
-const $ = document,
-    backDrop = $.getElementById('bakdrop'),
-    cartIcon = $.getElementById('cartIcon'),
-    cartModal = $.getElementById('cartModal'),
-    confirmModal = $.getElementById('confirmModal'),
-    productCards = $.querySelector('.product-cards'),
-    totalPrice = $.getElementById('totalPrice'),
-    cartItem = $.getElementById('cartItem'),
-    cartModalItems = $.getElementById('cartModalItems'),
-    clearCart = $.getElementById('clearCart')
+// Function Select Element by ID
+const getID = ID => $.getElementById(ID)
 
+// Shoping Cart
 let cart = [];
+
+// Variables
+const $ = document
+const backDrop = getID('bakdrop')
+const cartIcon = getID('cartIcon')
+const cartModal = getID('cartModal')
+const confirmModal = getID('confirmModal')
+const productCards = $.querySelector('.product-cards')
+const totalPrice = getID('totalPrice')
+const cartItem = getID('cartItem')
+const cartModalItems = getID('cartModalItems')
+const clearCart = getID('clearCart')
+
+/**
+ * 
+ * @event DOMContentLoaded
+ * 
+ * @constructor
+ * 
+ */
+$.addEventListener('DOMContentLoaded', () => {
+
+    // Make new class
+    const ui = new Ui();
+    
+    // Receive Item From API
+    const productsData = getProductsAPI()
+
+    // add item to shopping cart from LocalStorage
+    ui.setupApp()
+
+    // Display Products to App
+    ui.displayProducts(productsData)
+
+    // Action buttons
+    ui.addToCart()
+
+    // Cleaning system
+    ui.clearLogic()
+
+    // After loading the application and getting the products from the API, store the product in LocalStorage
+    Storage.saveProducts(productsData)
+
+    // Modal Cart controller
+    backDrop.addEventListener('click', ui.closeModalCart)
+    confirmModal.addEventListener('click', ui.closeModalCart)
+    cartIcon.addEventListener('click', ui.showModalCart)
+
+})
+
 
 /**
  * 
@@ -42,6 +85,22 @@ const getProductsAPI = () => productsData
  * 
  */
 class Ui {
+
+    /**
+     * @constructor
+     */
+    showModalCart() {
+        cartModal.style.top = "50%"
+        backDrop.style.display = "block"
+    }
+
+    /**
+     * @constructor
+     */
+    closeModalCart() {
+        cartModal.style.top = "-50%"
+        backDrop.style.display = "none"
+    }
 
     /**
      * 
@@ -227,10 +286,10 @@ class Ui {
 
         // Remove All Item to Cart
         clearCart.addEventListener('click', () => this.clearCartButton())
-        
+
         // cart functionality
         cartModalItems.addEventListener('click', (e) => {
-            
+
             const elementClicked = e.target
 
             //cheack classList target
@@ -252,7 +311,7 @@ class Ui {
                 Storage.saveCart(cart)
 
                 const test = [...cartModalItems.children];
-                
+
                 test.forEach((event) => {
                     if (event.dataset.id == elementClicked.dataset.id) cartModalItems.removeChild(event)
                 })
@@ -278,7 +337,7 @@ class Ui {
         while (_cartItem.length) cartModalItems.removeChild(_cartItem[0])
 
         // Close Modal after clear
-        closemodalcart()
+        this.closemodalcart()
     }
 
     /**
@@ -310,11 +369,14 @@ class Ui {
 
     /**
      * 
-     * @param {*} idItems 
+     * Remove Item
+     * 
+     * @param {Number} ID 
+     * 
      */
-    removeItem(idItems) {
+    removeItem(ID) {
 
-        cart = cart.filter((idItem) => idItem.id !== idItems)
+        cart = cart.filter((idItem) => idItem.id !== ID)
 
         // upsate price & item
         this.setCartValue(cart)
@@ -328,18 +390,19 @@ class Ui {
 
     /**
      * 
-     * @param {*} id 
+     * @param {Number} ID 
      */
-    changeTextButton(id) {
+    changeTextButton(ID) {
 
-        [...$.querySelectorAll('#addToCartBtn')].forEach((carts) => {
+        [...$.querySelectorAll('#addToCartBtn')].forEach((_cartItem) => {
 
-            const isInCart = parseInt(carts.dataset.id) === parseInt(id)
+            const isInCart = parseInt(_cartItem.dataset.id) === parseInt(ID)
 
             if (isInCart) {
-                carts.innerText = "add to cart"
-                carts.disabled = false
+                _cartItem.innerText = "add to cart"
+                _cartItem.disabled = false
             }
+
         })
     }
 }
@@ -355,57 +418,38 @@ class Ui {
  */
 class Storage {
 
-    static saveProducts(data) {
-        localStorage.setItem("products", JSON.stringify(data))
+    /**
+     * 
+     * @param {Object} getProducts 
+     */
+    static saveProducts(dataProduct) {
+        localStorage.setItem("products", JSON.stringify(dataProduct))
     }
 
-    static getProducts(id) {
-        return JSON.parse(localStorage.getItem('products')).find(p => p.id === parseInt(id))
+    /**
+     * 
+     * @param {Number} idProduct 
+     * 
+     * @returns {Object}
+     */
+    static getProducts(idProduct) {
+        return JSON.parse(localStorage.getItem('products')).find(p => p.id === parseInt(idProduct))
     }
 
-    static saveCart(cart) {
-        localStorage.setItem('carts', JSON.stringify(cart))
+    /**
+     * 
+     * @param {Object} getProducts 
+     */
+    static saveCart(getProducts) {
+        localStorage.setItem('carts', JSON.stringify(getProducts))
     }
 
+    /**
+     * 
+     * @returns {Object}
+     */
     static getCart() {
         return JSON.parse(localStorage.getItem('carts'));
     }
 
 }
-
-
-const showmodalcart = () => {
-    cartModal.style.top = "50%"
-    backDrop.style.display = "block"
-}
-
-const closemodalcart = () => {
-    cartModal.style.top = "-50%"
-    backDrop.style.display = "none"
-}
-
-/**
- * @event DOMContentLoaded
- * 
- * 
- */
-$.addEventListener('DOMContentLoaded', () => {
-
-    const ui = new Ui();
-
-    ui.setupApp()
-
-    const productsData = getProductsAPI()
-
-    ui.displayProducts(productsData)
-
-    ui.addToCart()
-
-    ui.clearLogic()
-
-    Storage.saveProducts(productsData)
-})
-
-backDrop.addEventListener('click', closemodalcart)
-confirmModal.addEventListener('click', closemodalcart)
-cartIcon.addEventListener('click', showmodalcart)
