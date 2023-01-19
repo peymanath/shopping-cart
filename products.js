@@ -1,4 +1,4 @@
-export const productsData = [
+export const productsDataAPI = [
   {
     id: 1,
     title: "queen panel bed",

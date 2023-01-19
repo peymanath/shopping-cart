@@ -8,7 +8,7 @@
  */
 
 //import Api to JS file
-import { productsData } from "./products.js"
+import { productsDataAPI } from "./products.js"
 
 // Function Select Element by ID
 const getID = ID => $.getElementById(ID)
@@ -39,9 +39,9 @@ $.addEventListener('DOMContentLoaded', () => {
 
     // Make new class
     const ui = new Ui();
-    
+
     // Receive Item From API
-    const productsData = getProductsAPI()
+    const productsData = Product.getProductsAPI()
 
     // add item to shopping cart from LocalStorage
     ui.setupApp()
@@ -59,10 +59,9 @@ $.addEventListener('DOMContentLoaded', () => {
     Storage.saveProducts(productsData)
 
     // Modal Cart controller
-    backDrop.addEventListener('click', ui.closeModalCart)
-    confirmModal.addEventListener('click', ui.closeModalCart)
-    cartIcon.addEventListener('click', ui.showModalCart)
-
+    backDrop.addEventListener('click', Ui.closeModalCart)
+    confirmModal.addEventListener('click', Ui.closeModalCart)
+    cartIcon.addEventListener('click', Ui.showModalCart)
 })
 
 
@@ -73,7 +72,14 @@ $.addEventListener('DOMContentLoaded', () => {
  * @returns {(Object|Array)}
  * 
  */
-const getProductsAPI = () => productsData
+class Product {
+
+    static getProductsAPI(){
+        return productsDataAPI
+    }
+    
+}
+
 
 /**
  * 
@@ -89,7 +95,7 @@ class Ui {
     /**
      * @constructor
      */
-    showModalCart() {
+    static showModalCart() {
         cartModal.style.top = "50%"
         backDrop.style.display = "block"
     }
@@ -97,7 +103,7 @@ class Ui {
     /**
      * @constructor
      */
-    closeModalCart() {
+    static closeModalCart() {
         cartModal.style.top = "-50%"
         backDrop.style.display = "none"
     }
@@ -337,7 +343,7 @@ class Ui {
         while (_cartItem.length) cartModalItems.removeChild(_cartItem[0])
 
         // Close Modal after clear
-        this.closemodalcart()
+        Ui.closeModalCart()
     }
 
     /**
@@ -385,7 +391,7 @@ class Ui {
         Storage.saveCart(cart);
 
         // change text buttons
-        this.changeTextButton(idItems)
+        this.changeTextButton(ID)
     }
 
     /**
