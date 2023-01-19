@@ -227,19 +227,22 @@ class Ui {
 
         // Remove All Item to Cart
         clearCart.addEventListener('click', () => this.clearCartButton())
-
+        
         // cart functionality
         cartModalItems.addEventListener('click', (e) => {
+            
+            const elementClicked = e.target
 
             //cheack classList target
-            if (e.target.classList.contains('plus')) this.incrementDecrement(e.target, "plus")
+            if (elementClicked.classList.contains('plus')) this.incrementDecrement(elementClicked, "plus")
 
-            else if (e.target.classList.contains('minus')) this.incrementDecrement(e.target, "minus")
+            else if (elementClicked.classList.contains('minus')) this.incrementDecrement(elementClicked, "minus")
 
-            else if (e.target.classList.contains('trash')) {
+            else if (elementClicked.classList.contains('trash')) {
 
                 // Remove Item
-                const removeItem = cart.find((event) => event.id == e.target.dataset.id);
+                const removeItem = cart.find((event) => event.id == elementClicked.dataset.id)
+
                 this.removeItem(removeItem.id)
 
                 // Save Storage 
@@ -247,10 +250,13 @@ class Ui {
 
                 // remove Item to Dom
                 Storage.saveCart(cart)
+
                 const test = [...cartModalItems.children];
+                
                 test.forEach((event) => {
-                    if (event.dataset.id == e.target.dataset.id) cartModalItems.removeChild(event)
+                    if (event.dataset.id == elementClicked.dataset.id) cartModalItems.removeChild(event)
                 })
+
             }
         })
     }
@@ -277,7 +283,9 @@ class Ui {
 
     /**
      * 
-     * @param {*} cartItem 
+     * increment or decrement total item
+     * 
+     * @param {Element} cartItem 
      * @param {number} methode 
      */
     incrementDecrement(target, methode) {
@@ -285,6 +293,7 @@ class Ui {
         // get item from cart
         const addedItem = cart.find((cItem) => cItem.id == target.dataset.id)
 
+        // Change total item
         if (methode === "minus") addedItem.quantity--
         else if (methode === "plus") addedItem.quantity++
 
@@ -295,7 +304,6 @@ class Ui {
         Storage.saveCart(cart)
 
         // Update Total Item
-
         if (methode === "minus") target.previousElementSibling.innerText = addedItem.quantity
         else if (methode === "plus") target.nextElementSibling.innerText = addedItem.quantity
     }
